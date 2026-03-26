@@ -1,0 +1,88 @@
+{
+  "<class 'classes.ParallaxLayer'>0": {
+    "x": -75,
+    "y": 104,
+    "speed_factor": 2.5,
+    "number": 0,
+    "area": "forest",
+    "composition": "010"
+  },
+  "<class 'classes.ParallaxLayer'>1": {
+    "x": 0,
+    "y": 139,
+    "speed_factor": 1.6,
+    "number": 1,
+    "area": "forest"
+  },
+  "<class 'classes.ParallaxLayer'>2": {
+    "x": 0,
+    "y": 119,
+    "speed_factor": 2,
+    "number": 2,
+    "area": "forest",
+    "composition": "010"
+  },
+  "<class 'classes.ParallaxLayer'>3": {
+    "x": 0,
+    "y": 155,
+    "speed_factor": 2,
+    "number": 3,
+    "area": "forest"
+  },
+  "<class 'classes.ParallaxLayer'>4": {
+    "x": 0,
+    "y": 173,
+    "speed_factor": 2,
+    "number": 4,
+    "area": "forest"
+  },
+  "<class 'classes.ParallaxLayer'>5": {
+    "x": 0,
+    "y": 191,
+    "speed_factor": 2,
+    "number": 5,
+    "area": "forest"
+  },
+  "<class 'classes.ParallaxLayer'>6": {
+    "x": 0,
+    "y": 210,
+    "speed_factor": 2,
+    "number": 6,
+    "area": "forest"
+  },
+  "<class 'classes.ParallaxLayer'>7": {
+    "x": 0,
+    "y": 240,
+    "speed_factor": 2,
+    "number": 7,
+    "area": "forest"
+  },
+  "<class 'classes.ParallaxLayer'>8": {
+    "x": 0,
+    "y": 240,
+    "speed_factor": 3,
+    "number": 8,
+    "area": "forest",
+    "composition": "00010000",
+    "z_index": 0
+  },
+  "<class 'classes.ParallaxLayer'>12": {
+    "x": 0,
+    "y": 241,
+    "speed_factor": 4.5,
+    "number": 9,
+    "area": "forest",
+    "z_index": 2
+  },
+  "<class 'classes.LevelObj'>11": {
+    "x": 200,
+    "y": 240,
+    "w": 80,
+    "h": 0,
+    "path": "assets/forest/tree/foreground_tree_2.png",
+    "no_scaling": true,
+    "z_index": 1,
+    "sprite_offset_x": -48,
+    "speed_factor": 1.8
+  }
+}

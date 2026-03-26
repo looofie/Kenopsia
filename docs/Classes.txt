@@ -1,0 +1,5 @@
+Esse documento lista todas as classes usadas no jogo. Para usar qualquer classe, basta importar o módulo "classes" (classes.py).
+
+● Collectable(posição_x, posição_y, nome)
+Classe de objetos coletáveis. Possui o atributo "sprite", que recebe a imagem correspondente ao coletável, dependendo da informação passada no argumento "nome". Exemplo: ao passar a palavra "wood" como argumento 3, será buscada uma imagem no diretório "assets/collectables/wood.png", que será o atributo sprite.
+
