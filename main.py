@@ -1,130 +1,139 @@
 import pygame
 import classes
-
+from general_functions import *
+from time import sleep 
+from sys import getsizeof
 
 pygame.init()
+clock = pygame.time.Clock()
+txt_obj = pygame.font.Font(size=20)
 
 #SCREEN VARIABLES DECLARATION
-size = (1024, 960)
-screen = pygame.display.set_mode(size)
-sm_surface = pygame.Surface((256, 240))
+screen_size = (1080, 600)
+screen = pygame.display.set_mode(screen_size)
+
+sm_surf_size = (432, 240)
+sm_surface = pygame.Surface(sm_surf_size)
+
+button = classes.Button("interact", 360, 8, 64, 32)
+camera = classes.Camera()
+vpoint = pygame.Rect(216, 60, 2, 2)
+player = classes.Player(216, 200, 8, 8)	
+#joy = classes.VirtualJoy()
+
+lists = load_area("data/test.json")
+background_list = lists[0]
+dynamic_obj_list = lists[1]
+dynamic_obj_list.extend([player])
 
 
-#PLAYER VARIABLES DECLARATION
-player = classes.Player()
-player.pos = (80, 32)#
+rects = [obj.collis_rect for obj in dynamic_obj_list if isinstance(obj,(classes.Character)) == False and isinstance(obj,(classes.ParallaxLayer)) == False]
+rects.append(pygame.Rect(-256, -64, 2, 2))
+
+#background_list = create_background("forest1")
+#dynamic_obj_list = [player]
+
+#rects = [obj.collis_rect for obj in dynamic_obj_list if isinstance(obj,(classes.Character)) == False]
+#rects.append(pygame.Rect(-256, -64, 2, 2))
+
+#save_area(background_list, dynamic_obj_list, "data/test.json")
 
 
-#----------------- TILE VARIABLE DECLARATION ---------------------
-rect_1 = pygame.Rect(70, 112, 64, 64)
-tile_list = [rect_1]
-
-grass = pygame.image.load("assets/grass.png")
-dirt = pygame.image.load("assets/dirt.png")	
-
-tiles_coord = [ #matrix 16x15	
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0],
-[1,1,1,1,1,1,0,2,2,2,2,2,0,1,1,1],
-[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]  ]
-
-for y, line in enumerate(tiles_coord):
-	for x, tile in enumerate(line):
-		if tile == 1:
-			grass_rect = grass.get_rect(topleft=(x * 16, y * 16 ))
-			tile_list.append(grass_rect)
-			
-		if tile == 2:
-			dirt_rect = dirt.get_rect(topleft=(x * 16, y * 16 ))
-			tile_list.append(dirt_rect)
-			
-			
-
-#----------------- DRAW TILES -------------------------------
-def draw_tiles():
-	for y, line in enumerate(tiles_coord):
-		for x, tile in enumerate(line):
-			if tile == 1:
-				sm_surface.blit(grass, (x * 16, y * 16 ))
-			
-			if tile == 2:
-				sm_surface.blit(dirt, (x * 16, y * 16 ))
-				
-
-
-#----------------- INPUT DETECTION -------------------------------
-up = 1758
-down = 1974
-left = 426
-right = 645
-	
-UP = pygame.math.Vector2(0, -1) 
-DOWN = pygame.math.Vector2(0, 1)
-LEFT = pygame.math.Vector2(-1, 0)
-RIGHT = pygame.math.Vector2(1, 0)
-	
-def input_detection(): #returns a Vector
-	input_direct = pygame.math.Vector2(0, 0)
-	
-	mouse_pos = pygame.mouse.get_pos()
-	keys = pygame.mouse.get_pressed()
-	
-	for key in keys:
-		if key and mouse_pos[0] < left:  input_direct += LEFT
-		if key and mouse_pos[0] > right: input_direct += RIGHT
-		if key and mouse_pos[1] < up:    input_direct += UP
-		if key and mouse_pos[1] > down:  input_direct += DOWN
-		
-	if input_direct != (0, 0): input_direct = input_direct.normalize()
-	
-	return input_direct
-
-
-
-
-last_input = pygame.math.Vector2(0,0)
+#---------------- MAIN LOOP ---------‐----
 run = True
 
 while run:
+	button_action = None
+#	sleep(0.1)
+	time = clock.tick(60)
+	
 	for event in pygame.event.get():
-		if event.type == pygame.QUIT: run = False
+		if event.type == pygame.QUIT:
+			run = False
+		
+		if event.type == pygame.FINGERDOWN:
+			fingerx = event.x * sm_surf_size[0]
+			fingery = event.y * sm_surf_size[1] * 3.45
+			if fingery <= sm_surf_size[1] and \
+			button.pressed(fingerx, fingery) == False:
+				
+#				lists = load_area("data/test_original.json")
+#				background_list = lists[0]
+#				dynamic_obj_list = lists[1]
+#				dynamic_obj_list.append(player)
+				
+				tree_info = {
+				"x" : fingerx,
+				"y" : fingery,
+				"w" : 20,
+				"h" : 10,
+				"type" : "tree1" }
+				
+				tree = classes.Tree(tree_info)
+				
+				dynamic_obj_list.append(tree)
+				rects.insert(0, tree.collis_rect)
+			
+			if button.pressed(fingerx, fingery):
+				button_action = "interact"
+				#tree.updt_tree(10)
+				
+#				joy.origin = [fingerx, fingery]
+
+#		if event.type == pygame.FINGERUP:
+#			joy.stick_pos = [joy.origin[0], joy.origin[1]]
+#			joy.relative_dist.x, joy.relative_dist.y = 0, 0
+#			joy.rect.center = joy.stick_pos
+#			
+#		if event.type == pygame.FINGERMOTION:
+#			fingerx = event.x * sm_surf_size[0]
+#			fingery = event.y * sm_surf_size[1] * 3.45
+#			joy.update(fingerx, fingery)
+
+						
+
+			
+			
+	# if player gets to exit:
+			#change_area()
 	
-	
-	#move
-	input_direct = input_detection()
-	if input_direct:
-		last_input = input_direct	
-	player.move(input_direct, last_input, tile_list)
+	obj_list = y_sort(background_list, dynamic_obj_list)
+
+	player.move(input_detection(), rects)
+	player.update_animation()
+	player.scaling_flipping()
+		
+	camera.move(
+	obj_list,
+	dynamic_obj_list,
+	player,
+	button_action
+	)
 	
 		
-	#render
-	sm_surface.fill((31, 31, 31))
-	draw_tiles()
-	
-	for tile in tile_list:
-		pygame.draw.rect(sm_surface, (255,255,255), tile)	
-	
-	player.render(sm_surface)
+	render_all(
+	obj_list,
+	sm_surface,
+	txt_obj,
+	button,
+	player,
+	f"{clock}"
+	)
+		
 	
 	
     #scale screen
-	scl_surface = pygame.transform.scale(sm_surface, (size))	
+	scl_surface = pygame.transform.scale(
+	sm_surface,
+	(screen_size)
+	)	
+	
 	screen.blit(scl_surface, (0, 0))
 
 
 
 	pygame.display.update()
-	
 
-pygame.quit() 
+		
+#save_area(background_list, dynamic_obj_list, "data/test.json")
+pygame.quit()
